@@ -35,6 +35,15 @@ float computeShadow(){
 	return shadow;
 }
 
+float computeFog()
+{
+ float fogDensity = 0.05f;
+ float fragmentDistance = length(fPosEye);
+ float fogFactor = exp(-pow(fragmentDistance * fogDensity, 2));
+
+ return clamp(fogFactor, 0.0f, 1.0f);
+}
+
 void computeLightComponents()
 {		
 	vec3 cameraPosEye = vec3(0.0f);//in eye coordinates, the viewer is situated at the origin
@@ -74,4 +83,8 @@ void main()
 	vec3 color = min((ambient + (1.0f - shadow) * diffuse) + (1.0f - shadow) * specular, 1.0f);
     
     fColor = vec4(color, 1.0f);
+	
+	float fogFactor = computeFog();
+	vec4 fogColor = vec4(0.5f, 0.5f, 0.5f, 1.0f);
+	fColor = mix(fogColor, fColor, fogFactor);
 }

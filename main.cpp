@@ -20,11 +20,23 @@
 #include "Camera.hpp"
 
 #include <iostream>
+#include "SkyBox.hpp"
 
-int glWindowWidth = 800;
-int glWindowHeight = 600;
+int glWindowWidth = 1280;
+int glWindowHeight = 720;
 int retina_width, retina_height;
 GLFWwindow* glWindow = NULL;
+
+
+float birdsZ = 0.1f;
+float birdsAngle = 0.1f;
+float birdsAngleSpeed = 0.1f;
+
+float birdsAngle2 = 0.0f;
+float birdsAngleSpeed2 = -0.1f;
+
+gps::Model3D birds1;
+gps::Model3D birds2;
 
 const unsigned int SHADOW_WIDTH = 2048;
 const unsigned int SHADOW_HEIGHT = 2048;
@@ -45,12 +57,12 @@ glm::vec3 lightColor;
 GLuint lightColorLoc;
 
 GLfloat near_plane = 0.03f;
-GLfloat far_plane = 100.0f;
-GLfloat left = -32.8f;
+GLfloat far_plane = 88.4f;
+GLfloat left = -33.0f;
 GLfloat right = 31.0f;
-GLfloat front = -34.6f;
-GLfloat back = 32.6f;
-GLfloat coeff = 18.4f;
+GLfloat front = -35.0f;
+GLfloat back = 33.0f;
+GLfloat coeff = 18.0f;
 
 gps::Camera myCamera(
 	glm::vec3(0.0f, 2.0f, 5.5f),
@@ -62,8 +74,10 @@ bool pressedKeys[1024];
 float angleY = 0.0f;
 GLfloat lightAngle;
 
-gps::Model3D nanosuit;
-gps::Model3D ground;
+GLuint textureID;
+gps::SkyBox mySkyBox;
+gps::Shader skyboxShader;
+
 gps::Model3D lightCube;
 gps::Model3D screenQuad;
 gps::Model3D scene;
@@ -104,7 +118,23 @@ GLenum glCheckError_(const char* file, int line) {
 
 void windowResizeCallback(GLFWwindow* window, int width, int height) {
 	fprintf(stdout, "window resized to width: %d , and height: %d\n", width, height);
-	//TODO	
+	glfwGetFramebufferSize(window, &glWindowWidth, &glWindowHeight);
+
+	myCustomShader.useShaderProgram();
+
+	// set projection matrix
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)glWindowWidth / (float)glWindowHeight, 0.1f, 1000.0f);
+	//send matrix data to shader
+	GLint projLoc = glGetUniformLocation(myCustomShader.shaderProgram, "projection");
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+	//lightShader.useShaderProgram();
+
+	//glUniformMatrix4fv(glGetUniformLocation(lightShader.shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+	// set Viewport transform
+	glViewport(0, 0, glWindowHeight, glWindowHeight);
+
 }
 
 void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mode) {
@@ -171,20 +201,42 @@ void processMovement()
 		myCamera.move(gps::MOVE_RIGHT, cameraSpeed);
 	}
 
+	if (glfwGetMouseButton(glWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+		glfwSetInputMode(glWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+
+	if (glfwGetMouseButton(glWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+		glfwSetInputMode(glWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+
+	if (pressedKeys[GLFW_KEY_P]) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+	}
+	if (pressedKeys[GLFW_KEY_I]) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	if (pressedKeys[GLFW_KEY_O]) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
 	if (pressedKeys[GLFW_KEY_1]) {
 		near_plane -= 0.1f;
+		std::cout << near_plane << '\n';
 	}
 
 	if (pressedKeys[GLFW_KEY_2]) {
 		near_plane += 0.1f;
+		std::cout << near_plane << '\n';
 	}
 
 	if (pressedKeys[GLFW_KEY_3]) {
 		far_plane -= 0.2f;
+		std::cout << far_plane << '\n';
 	}
 
 	if (pressedKeys[GLFW_KEY_4]) {
 		far_plane += 0.2f;
+		std::cout << far_plane << '\n';
 	}
 
 	if (pressedKeys[GLFW_KEY_5]) {
@@ -290,11 +342,12 @@ void initOpenGLState()
 }
 
 void initObjects() {
-	nanosuit.LoadModel("objects/nanosuit/nanosuit.obj");
-	ground.LoadModel("objects/ground/ground.obj");
+
 	lightCube.LoadModel("objects/cube/cube.obj");
 	screenQuad.LoadModel("objects/quad/quad.obj");
 	scene.LoadModel("objects/scene/gameScene.obj");
+	birds1.LoadModel("objects/birds/birds.obj");
+	birds2.LoadModel("objects/birds/birds.obj");
 }
 
 void initShaders() {
@@ -306,6 +359,23 @@ void initShaders() {
 	screenQuadShader.useShaderProgram();
 	depthMapShader.loadShader("shaders/depthMap.vert", "shaders/depthMap.frag");
 	depthMapShader.useShaderProgram();
+}
+
+void initSkybox() {
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	std::vector<const GLchar*> faces;
+	faces.push_back("textures/skybox/Left+X.png");
+	faces.push_back("textures/skybox/Right-X.png");
+	faces.push_back("textures/skybox/Up+Y.png");
+	faces.push_back("textures/skybox/Down-Y.png");
+	faces.push_back("textures/skybox/Front+Z.png");
+	faces.push_back("textures/skybox/Back-Z.png");
+
+	mySkyBox.Load(faces);
+	skyboxShader.loadShader("shaders/skyboxShader.vert", "shaders/skyboxShader.frag");
+	skyboxShader.useShaderProgram();
 }
 
 void initUniforms() {
@@ -370,6 +440,36 @@ glm::mat4 computeLightSpaceTrMatrix() {
 	return lightSpaceTrMatrix;
 }
 
+void animateBirds(gps::Shader shader)
+{
+	model = glm::mat4(1.0f);
+	if (birdsZ < -15)
+		birdsZ = 0;
+	model = glm::translate(model, glm::vec3(0, 5, birdsZ)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 0.5f)) * glm::rotate(glm::mat4(1.0f), glm::radians(birdsAngle), glm::vec3(0.0f, 0.0f, 1.0f));
+	birdsZ -= 0.007;
+	if (birdsAngle > 8)
+		birdsAngleSpeed = -0.1;
+	if (birdsAngle < -8)
+		birdsAngleSpeed = 0.1;
+	birdsAngle += birdsAngleSpeed;
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	shader.useShaderProgram();
+	//draw birds
+	birds1.Draw(shader);
+	model = glm::mat4(1.0f);
+
+	model = glm::translate(model, glm::vec3(0, 5, birdsZ - 0.5)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 0.5f)) * glm::rotate(glm::mat4(1.0f), glm::radians(birdsAngle2), glm::vec3(0.0f, 0.0f, 1.0f));
+	if (birdsAngle2 > 8)
+		birdsAngleSpeed2 = -0.1;
+	if (birdsAngle2 < -8)
+		birdsAngleSpeed2 = 0.1;
+	birdsAngle2 += birdsAngleSpeed2;
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	shader.useShaderProgram();
+	//draw birds
+	birds2.Draw(shader);
+}
+
 void drawObjects(gps::Shader shader, bool depthPass) {
 
 	shader.useShaderProgram();
@@ -383,20 +483,11 @@ void drawObjects(gps::Shader shader, bool depthPass) {
 		glUniformMatrix3fv(normalMatrixLoc, 1, GL_FALSE, glm::value_ptr(normalMatrix));
 	}
 
-	nanosuit.Draw(shader);
 	scene.Draw(shader);
+	animateBirds(shader);
+	//render skybox
+	mySkyBox.Draw(skyboxShader, view, projection);
 
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.5f));
-	glUniformMatrix4fv(glGetUniformLocation(shader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-
-	// do not send the normal matrix if we are rendering in the depth map
-	if (!depthPass) {
-		normalMatrix = glm::mat3(glm::inverseTranspose(view * model));
-		glUniformMatrix3fv(normalMatrixLoc, 1, GL_FALSE, glm::value_ptr(normalMatrix));
-	}
-
-	ground.Draw(shader);
 }
 
 void renderScene() {
@@ -495,6 +586,7 @@ int main(int argc, const char* argv[]) {
 	initShaders();
 	initUniforms();
 	initFBO();
+	initSkybox();
 
 	glCheckError();
 

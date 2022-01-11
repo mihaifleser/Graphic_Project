@@ -1,9 +1,14 @@
 ﻿  main.cpp
-D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(280,33): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(332,33): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(449,17): warning C4305: '-=': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(451,25): warning C4305: '=': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(453,24): warning C4305: '=': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(463,26): warning C4305: '=': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(465,25): warning C4305: '=': truncation from 'double' to 'float'
   Generating code
-  2 of 1663 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+  0 of 1722 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    14 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 LINK : warning LNK4286: symbol '__glewGenBuffers' defined in 'libglew32.lib(glew.obj)' is imported by 'Mesh.obj'
 LINK : warning LNK4286: symbol '__glewGenVertexArrays' defined in 'libglew32.lib(glew.obj)' is imported by 'Mesh.obj'
