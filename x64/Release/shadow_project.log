@@ -1,12 +1,28 @@
 ﻿  main.cpp
-D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(332,33): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
-D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(449,17): warning C4305: '-=': truncation from 'double' to 'float'
-D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(451,25): warning C4305: '=': truncation from 'double' to 'float'
-D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(453,24): warning C4305: '=': truncation from 'double' to 'float'
-D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(463,26): warning C4305: '=': truncation from 'double' to 'float'
-D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(465,25): warning C4305: '=': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(285,33): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(402,17): warning C4305: '-=': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(404,25): warning C4305: '=': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(406,24): warning C4305: '=': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(416,26): warning C4305: '=': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(418,25): warning C4305: '=': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(433,25): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(435,48): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(442,5): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(442,25): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(451,5): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(451,25): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(453,48): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(460,5): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(460,25): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(469,5): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(469,25): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(478,5): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(478,25): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(480,48): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(487,5): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Algoritmi fundamentali\Grafica\Shadow_proj\shadow_project\shadow_project\main.cpp(487,25): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   Generating code
-  0 of 1722 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  0 of 1731 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

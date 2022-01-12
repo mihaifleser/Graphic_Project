@@ -22,8 +22,8 @@
 #include <iostream>
 #include "SkyBox.hpp"
 
-int glWindowWidth = 1280;
-int glWindowHeight = 720;
+int glWindowWidth = 1920;
+int glWindowHeight = 1080;
 int retina_width, retina_height;
 GLFWwindow* glWindow = NULL;
 
@@ -34,6 +34,7 @@ float birdsAngleSpeed = 0.1f;
 
 float birdsAngle2 = 0.0f;
 float birdsAngleSpeed2 = -0.1f;
+bool cameraPreview = false;
 
 gps::Model3D birds1;
 gps::Model3D birds2;
@@ -169,14 +170,6 @@ void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
 
 void processMovement()
 {
-	if (pressedKeys[GLFW_KEY_Q]) {
-		angleY -= 1.0f;
-	}
-
-	if (pressedKeys[GLFW_KEY_E]) {
-		angleY += 1.0f;
-	}
-
 	if (pressedKeys[GLFW_KEY_J]) {
 		lightAngle -= 1.0f;
 	}
@@ -219,64 +212,24 @@ void processMovement()
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	if (pressedKeys[GLFW_KEY_1]) {
-		near_plane -= 0.1f;
-		std::cout << near_plane << '\n';
-	}
-
-	if (pressedKeys[GLFW_KEY_2]) {
-		near_plane += 0.1f;
-		std::cout << near_plane << '\n';
-	}
-
-	if (pressedKeys[GLFW_KEY_3]) {
-		far_plane -= 0.2f;
-		std::cout << far_plane << '\n';
-	}
-
-	if (pressedKeys[GLFW_KEY_4]) {
-		far_plane += 0.2f;
-		std::cout << far_plane << '\n';
-	}
-
-	if (pressedKeys[GLFW_KEY_5]) {
-		left += 0.2f;
-	}
-
-	if (pressedKeys[GLFW_KEY_6]) {
-		left -= 0.2f;
-	}
-
-	if (pressedKeys[GLFW_KEY_7]) {
-		right += 0.2f;
-	}
-
-	if (pressedKeys[GLFW_KEY_8]) {
-		right -= 0.2f;
-	}
-
-	if (pressedKeys[GLFW_KEY_9]) {
-		front += 0.2f;
-	}
-
-	if (pressedKeys[GLFW_KEY_0]) {
-		front -= 0.2f;
-	}
-
 	if (pressedKeys[GLFW_KEY_Z]) {
-		back += 0.2f;
-	}
-
-	if (pressedKeys[GLFW_KEY_X]) {
-		back -= 0.2f;
-	}
-
-	if (pressedKeys[GLFW_KEY_C]) {
-		coeff += 0.2f;
+		printf("x = %f   y = %f   z = %f \n", myCamera.getCameraPos().x, myCamera.getCameraPos().y, myCamera.getCameraPos().z);
+		printf("x = %f   y = %f   z = %f \n", myCamera.getCameraTarget().x, myCamera.getCameraTarget().y, myCamera.getCameraTarget().z);
+		printf("x = %f   y = %f   z = %f \n", myCamera.getCameraUpDirection().x, myCamera.getCameraUpDirection().y, myCamera.getCameraUpDirection().z);
 	}
 
 	if (pressedKeys[GLFW_KEY_V]) {
-		coeff -= 0.2f;
+		glfwSetTime(0.0f);
+		myCamera.setCameraPos(glm::vec3(0.338150f, 1.382484f, 4.325485f));
+		myCamera.setCameraTarget(glm::vec3(1.574606f, 1.307926f, 2.609866f));
+		myCamera.setCameraUpDirection(glm::vec3(0.0f, 1.0f, 0.0f));
+		myCamera.computeCameraUpDirection();
+		myCamera.computeCameraRightDirection();
+		cameraPreview = true;
+	}
+
+	if (pressedKeys[GLFW_KEY_B]) {
+		cameraPreview = false;
 	}
 
 }
@@ -470,6 +423,77 @@ void animateBirds(gps::Shader shader)
 	birds2.Draw(shader);
 }
 
+bool between(float x, float t1, float t2)
+{
+	return x > t1 && x < t2;
+}
+
+void animateCamera() {
+
+	if (between(glfwGetTime(), 0 , 10)) {
+
+		myCamera.move(gps::MOVE_FORWARD, cameraSpeed * 0.25);
+
+		view = myCamera.getViewMatrix();
+		myCustomShader.useShaderProgram();
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	}
+
+	if (between(glfwGetTime(), 10, 10.7)) {
+
+		myCamera.rotate(0.01f, 0.0f);
+
+		view = myCamera.getViewMatrix();
+		myCustomShader.useShaderProgram();
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	}
+
+	if (between(glfwGetTime(), 10.7, 16)) {
+
+		myCamera.move(gps::MOVE_FORWARD, cameraSpeed * 0.25);
+
+		view = myCamera.getViewMatrix();
+		myCustomShader.useShaderProgram();
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	}
+
+	if (between(glfwGetTime(), 16, 16.7)) {
+
+		myCamera.rotate(-0.01f, 0.0f);
+
+		view = myCamera.getViewMatrix();
+		myCustomShader.useShaderProgram();
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	}
+
+	if (between(glfwGetTime(), 17, 19.36)) {
+
+		myCamera.rotate(0.0f, 0.01f);
+
+		view = myCamera.getViewMatrix();
+		myCustomShader.useShaderProgram();
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	}
+
+	if (between(glfwGetTime(), 19.36, 26)) {
+
+		myCamera.move(gps::MOVE_FORWARD, cameraSpeed * 0.25);
+
+		view = myCamera.getViewMatrix();
+		myCustomShader.useShaderProgram();
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	}
+
+	if (between(glfwGetTime(), 26, 26.4)) {
+
+		myCamera.rotate(-0.01f, 0.0f);
+
+		view = myCamera.getViewMatrix();
+		myCustomShader.useShaderProgram();
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	}
+}
+
 void drawObjects(gps::Shader shader, bool depthPass) {
 
 	shader.useShaderProgram();
@@ -561,7 +585,7 @@ void renderScene() {
 		model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
 		glUniformMatrix4fv(glGetUniformLocation(lightShader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
-		lightCube.Draw(lightShader);
+		//lightCube.Draw(lightShader);
 	}
 }
 
@@ -593,6 +617,9 @@ int main(int argc, const char* argv[]) {
 	while (!glfwWindowShouldClose(glWindow)) {
 		processMovement();
 		renderScene();
+
+		if (cameraPreview)
+			animateCamera();
 
 		glfwPollEvents();
 		glfwSwapBuffers(glWindow);
